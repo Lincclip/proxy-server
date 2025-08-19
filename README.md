@@ -24,13 +24,66 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+이미지 프록시 서버 - CORS 문제를 해결하고 외부 이미지를 안전하게 로드할 수 있는 NestJS 기반 프록시 서버입니다.
+
+### 기능
+- 외부 이미지 URL을 프록시하여 CORS 문제 해결
+- 이미지 캐싱 및 보안 강화
+- RESTful API 엔드포인트 제공
+
+### API 사용법
+```
+GET /proxy/image?url=<이미지URL>
+```
+
+예시:
+```
+http://localhost:3000/proxy/image?url=https://picsum.photos/400/300
+```
 
 ## Project setup
 
 ```bash
 $ pnpm install
 ```
+
+## Docker 배포 (Koyeb)
+
+### 로컬에서 Docker 이미지 빌드
+```bash
+# Docker 이미지 빌드
+docker build -t proxy-server .
+
+# 로컬에서 실행 테스트
+docker run -p 3000:3000 proxy-server
+```
+
+### Koyeb에 배포하기
+
+1. **GitHub에 코드 푸시**
+```bash
+git add .
+git commit -m "Add Docker support for Koyeb deployment"
+git push origin main
+```
+
+2. **Koyeb 대시보드에서 배포**
+   - Koyeb 대시보드 접속
+   - "Create App" 클릭
+   - GitHub 저장소 연결
+   - Dockerfile 자동 감지
+   - 환경 변수 설정 (필요시)
+   - 배포 실행
+
+3. **koyeb.yaml 사용 (선택사항)**
+```bash
+# Koyeb CLI 설치 후
+koyeb app init proxy-server --docker .
+```
+
+### 환경 변수
+- `NODE_ENV`: production (기본값)
+- `PORT`: 3000 (기본값)
 
 ## Compile and run the project
 
