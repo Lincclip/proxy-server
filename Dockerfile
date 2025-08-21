@@ -41,6 +41,9 @@ RUN pnpm install --prod --frozen-lockfile
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
 
+# Copy public folder for static files
+COPY public ./public
+
 # Change ownership to app user
 RUN chown -R nestjs:nodejs /app
 USER nestjs

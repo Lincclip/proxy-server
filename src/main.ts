@@ -7,8 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
   // 정적 파일 서빙 설정
-  app.useStaticAssets(join(__dirname, '..', 'src', 'policy'), {
-    prefix: '/policy',
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    prefix: '/',
   });
   
   app.enableCors({
