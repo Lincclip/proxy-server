@@ -44,6 +44,9 @@ COPY --from=builder /app/dist ./dist
 # Copy public folder for static files
 COPY public ./public
 
+# Copy environment file (if exists)
+COPY .env* ./
+
 # Change ownership to app user
 RUN chown -R nestjs:nodejs /app
 USER nestjs
@@ -53,7 +56,7 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+  CMD node -e "require('http').get('http://localhost:8000', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start the application
 CMD ["node", "dist/main"]

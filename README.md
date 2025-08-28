@@ -30,15 +30,25 @@
 - 외부 이미지 URL을 프록시하여 CORS 문제 해결
 - 이미지 캐싱 및 보안 강화
 - RESTful API 엔드포인트 제공
+- **Google OAuth 인증 처리** (Chrome Extension 연동)
 
 ### API 사용법
+
+#### 이미지 프록시
 ```
 GET /proxy/image?url=<이미지URL>
 ```
 
 예시:
 ```
-http://localhost:3000/proxy/image?url=https://picsum.photos/400/300
+http://localhost:8000/proxy/image?url=https://picsum.photos/400/300
+```
+
+#### OAuth 인증
+```
+GET /auth/google                    # Google OAuth 시작
+GET /auth/google/callback          # OAuth 콜백 처리
+GET /auth/status?token=<token>     # 토큰 검증
 ```
 
 ## Project setup
@@ -47,15 +57,31 @@ http://localhost:3000/proxy/image?url=https://picsum.photos/400/300
 $ pnpm install
 ```
 
-## Docker 배포 (Koyeb)
+## Docker 배포
 
-### 로컬에서 Docker 이미지 빌드
+### 로컬에서 Docker 실행
 ```bash
-# Docker 이미지 빌드
-docker build -t proxy-server .
+# Docker Compose로 실행 (권장)
+docker-compose up -d
 
-# 로컬에서 실행 테스트
-docker run -p 3000:3000 proxy-server
+# 또는 직접 Docker 이미지 빌드
+docker build -t proxy-server .
+docker run -p 8000:8000 --env-file .env proxy-server
+```
+
+### Docker Compose 사용
+```bash
+# 개발 환경
+docker-compose up
+
+# 백그라운드 실행
+docker-compose up -d
+
+# 로그 확인
+docker-compose logs -f
+
+# 중지
+docker-compose down
 ```
 
 ### Koyeb에 배포하기
@@ -84,6 +110,32 @@ koyeb app init proxy-server --docker .
 ### 환경 변수
 - `NODE_ENV`: production (기본값)
 - `PORT`: 3000 (기본값)
+
+### OAuth 설정
+프로젝트 루트에 `.env` 파일을 생성하고 다음 환경 변수를 설정하세요:
+
+```env
+# Google OAuth 설정
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+OAUTH_REDIRECT_URI=http://localhost:8000/auth/google/callback
+
+# Supabase 설정
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+#### Google Cloud Console 설정
+1. [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
+2. OAuth 2.0 클라이언트 ID 생성
+3. **승인된 리디렉션 URI**에 추가:
+   ```
+   http://localhost:8000/auth/google/callback  // 개발용
+   https://your-domain.com/auth/google/callback  // 프로덕션용
+   ```
+
+#### Chrome Extension 연동
+`chrome-extension-example.js` 파일을 참고하여 Chrome Extension에서 OAuth 로그인을 구현할 수 있습니다.
 
 ## Compile and run the project
 

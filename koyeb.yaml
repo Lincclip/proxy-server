@@ -3,7 +3,7 @@ service:
   name: proxy-server
   type: web
   ports:
-    - port: 3000
+    - port: 8000
       protocol: http
   routes:
     - path: /
@@ -11,6 +11,18 @@ service:
   env:
     - name: NODE_ENV
       value: production
+    - name: PORT
+      value: "8000"
+    - name: GOOGLE_CLIENT_ID
+      value: ${GOOGLE_CLIENT_ID}
+    - name: GOOGLE_CLIENT_SECRET
+      value: ${GOOGLE_CLIENT_SECRET}
+    - name: OAUTH_REDIRECT_URI
+      value: ${OAUTH_REDIRECT_URI}
+    - name: SUPABASE_URL
+      value: ${SUPABASE_URL}
+    - name: SUPABASE_ANON_KEY
+      value: ${SUPABASE_ANON_KEY}
   scaling:
     horizontal:
       min: 1
@@ -18,7 +30,7 @@ service:
   healthcheck:
     http:
       path: /
-      port: 3000
+      port: 8000
     initial_delay_seconds: 10
     interval_seconds: 30
     timeout_seconds: 5
