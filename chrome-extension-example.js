@@ -62,7 +62,7 @@ async function handleLogin() {
     updateStatus('Google 로그인 준비 중...');
     
     // NestJS 서버의 OAuth 엔드포인트 사용
-    const authUrl = 'http://localhost:8000/auth/google'; // 또는 실제 서버 URL
+    const authUrl = 'https://lincclip-proxy-server.koyeb.app/auth/google';
     
     // 새 탭에서 로그인 열기
     chrome.tabs.create({
@@ -133,7 +133,7 @@ async function handleLogout() {
 // 토큰 검증
 async function validateToken(token) {
   try {
-    const response = await fetch(`http://localhost:8000/auth/status?token=${token}`);
+    const response = await fetch(`https://lincclip-proxy-server.koyeb.app/auth/status?token=${token}`);
     const result = await response.json();
     return result.valid;
   } catch (error) {
